@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pages Display</title>
+</head>
+<body>
+    <div id="pages-container">Loading...</div>
+
+    <script>
+        // 获取URL中的ID参数
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetId = urlParams.get('id'); // 获取id参数的值，例如 ?id=8008786
+
+        // 获取容器
+        const container = document.getElementById('pages-container');
+
+        // 从远程URL获取JSON数据
+        fetch('https://raw.githubusercontent.com/Asaerror/netboard/refs/heads/main/net8.0/out/user_UV.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // 解析JSON数据
+            })
+            .then(jsonData => {
+                // 清空加载提示
+                container.innerHTML = '';
+
+                // 如果传入了ID参数
+                if (targetId) {
+                    // 检查JSON数据中是否存在该ID
+                    if (jsonData.hasOwnProperty(targetId)) {
+                        const pages = jsonData[targetId].pages;
+                        // 创建新的段落元素
+                        const p = document.createElement('p');
+                        // 设置段落内容
+                        p.textContent = `ID: ${targetId}, Pages: ${pages.join(', ')}`;
+                        // 将段落添加到容器中
+                        container.appendChild(p);
+                    } else {
+                        // 如果ID不存在，显示错误信息
+                        const p = document.createElement('p');
+                        p.textContent = `ID: ${targetId} not found.`;
+                        container.appendChild(p);
+                    }
+                } else {
+                    // 如果没有传入ID参数，显示所有数据
+                    for (const key in jsonData) {
+                        if (jsonData.hasOwnProperty(key)) {
+                            const pages = jsonData[key].pages;
+                            const p = document.createElement('p');
+                            p.textContent = `ID: ${key}, Pages: ${pages.join(', ')}`;
+                            container.appendChild(p);
+                        }
+                    }
+                }
+            })
+            .catch(error => {
+                // 处理错误
+                console.error('Error fetching JSON data:', error);
+                container.innerHTML = 'Failed to load data.';
+            });
+    </script>
+</body>
+</html>
