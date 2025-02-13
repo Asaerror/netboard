@@ -30,7 +30,7 @@ jobs:
         git config --global user.email "2215705548@qq.com"
         
         # 添加、提交、推送文件
-        cd net8.0/out
-        git add *
+        cd net8.0
+        git add out
         git commit -m "Auto-commit output files"
         git push origin main
