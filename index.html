@@ -22,7 +22,7 @@
     </style>
 </head>
 <body>
-    <div id="pages-container">Loading...</div>
+    <div id="pages-container">加载中...</div>
 
     <script>
         // 获取URL中的ID参数
@@ -107,7 +107,7 @@
             .catch(error => {
                 // 处理错误
                 console.error('Error fetching data:', error);
-                container.innerHTML = 'Failed to load data.';
+                container.innerHTML = '<p>页面获取失败，可能是因为github链接不稳定，挂梯子或者改一下host(电脑)应该可以有效解决...</p>';
             });
     </script>
 </body>
