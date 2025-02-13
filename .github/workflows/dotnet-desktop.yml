@@ -61,7 +61,7 @@ jobs:
       run: |
         cd Netboard_tools
         dotnet build
-        dotnet run --project Program.csproj  # 替换为实际项目文件名
+        dotnet run --project Program.csproj  
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts
