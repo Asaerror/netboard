@@ -32,4 +32,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: MSIX Package
-        path: D:\a\netboard\netboard\net8.0\out
+        path: .\out
