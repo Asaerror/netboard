@@ -200,7 +200,8 @@ namespace Netboard_tools
             }catch (Exception e)
             {
                 Console.WriteLine($"页面错误，请检测网络后联系开发人员");
-                throw e;
+                Console.WriteLine(e.ToString());
+                return -1;
             }
         }
         #region 重载
