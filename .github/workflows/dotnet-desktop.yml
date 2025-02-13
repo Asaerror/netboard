@@ -23,13 +23,17 @@ jobs:
       run: |
         cd net8.0
         ./Netboard_tools.exe
-    - name: file
-      run: |
-        cd net8.0
-        tree
-    # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: Out
-        path: .\out
+    - name: Commit and Push Output Files
+    run: |
+      # 配置 Git 身份
+      git config --global user.name "GitHub Actions"
+      git config --global user.email "actions@github.com"
+      
+      # 添加、提交、推送文件
+      cd net8.0
+      git add out
+      git commit -m "Auto-commit output files"
+      git push origin main
+    env:
+      # 使用 Personal Access Token (PAT) 推送
+      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
