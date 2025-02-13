@@ -21,9 +21,8 @@ jobs:
 
     - name: Build and Run
       run: |
-        cd Netboard_tools
-        dotnet build
-        dotnet run --project Program.csproj  
+        cd Netboard_tools/bin/Release/net8.0/publish
+        ./Netboard_tools.exe
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts
