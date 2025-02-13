@@ -16,35 +16,48 @@ namespace Netboard_tools
         static void Main(string[] args)
         {
             Console.Title = $"Netboard后端小工具 浮云制作~";
-            Console.WriteLine("请不要在程序运行时对控制台进行缩放，不然会报错(懒得修bug)\n按任意键继续");
 #if forUser
+            Console.WriteLine("请不要在程序运行时对控制台进行缩放，不然会报错(懒得修bug)\n按任意键继续");
             Console.ReadKey();
 #endif
             int max = GetLatesPage(hub,cat);
             Console.WriteLine($"最新地址为{cat}:{max}");
+#if forUser
             Console.Clear();
+#endif
             int min = 0;
             http.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 Edg/133.0.0.0");
             http.DefaultRequestHeaders.Add("Cookie", "wikidot_token7=123456");
             User fc = new User(7508990);
-            var s = new Slider(max,min,Console.BufferWidth-20,' ','/',max);
-            var position =Console.GetCursorPosition();
+#if forUser
+                var s = new Slider(max,min,Console.BufferWidth-20,' ','/',max);
+#else
+                var s = new Slider(max, min, 50, ' ', '/', max);
+#endif
+
+#if forUser
+                var position =Console.GetCursorPosition();
+#endif
             for (int i = max;i>min;i--)
             {
                 s.Render(i,false);
+#if forUser
                 Console.WriteLine($"\n------------\n");
+#endif
                 AddUVFromPage(i, cat);
+#if forUser
                 Console.Clear();
                 Console.SetCursorPosition(position.Left, position.Top);
+#endif
             }
             string uv = JsonSerializer.Serialize(User.all);
-            string path = System.AppDomain.CurrentDomain.BaseDirectory + "/生成";
+            string path = System.AppDomain.CurrentDomain.BaseDirectory + "out";
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
-            File.WriteAllText(path +"/user_UV.json",uv);
-
+            File.WriteAllText(path +"\\user_UV.json",uv);
+            Console.WriteLine(path);
         }
 
 
@@ -88,17 +101,25 @@ namespace Netboard_tools
                 this.empty = empty;
                 this.block = block;
                 this.current = current;
-                position = Console.GetCursorPosition();
+#if forUser
+                 position = Console.GetCursorPosition();
+#endif
                 Render(current,false);
             }
             public void Render(int c,bool t= true)
             {
+#if forUser
                 var pos = Console.GetCursorPosition();
+#endif
                 current = c;
                 int p = (max - current) * size / range;
+#if forUser
                 Console.SetCursorPosition(position.Left, position.Top);
-                Console.Write($"[{new String(block,p) + new String(empty, (size-p))}]{max - current}/{range}");
+#endif
+                Console.Write($"[{new String(block,p) + new String(empty, (size-p))}]{max - current}/{range}({current}/{min})\n");
+#if forUser
                 if(t) Console.SetCursorPosition(pos.Left, pos.Top);
+#endif
 
             }
         }
@@ -108,7 +129,9 @@ namespace Netboard_tools
             try
             {
 
+#if forUser
                 Console.WriteLine("获取uv用户中...");
+#endif
                 var v = new Dictionary<string, string>() { { "pageId", pageId.ToString() }, { "moduleName", "pagerate/WhoRatedPageModule" }, { "wikidot_token7", "123456" } };
                 var httpContent = new FormUrlEncodedContent(v);
                 string uvList = http.PostAsync("https://netboard.wikidot.com/ajax-module-connector.php", httpContent).Result.Content.ReadAsStringAsync().Result;
@@ -118,7 +141,9 @@ namespace Netboard_tools
                 {
                     uv.Add(int.Parse(match.Groups["userid"].Value));
                 }
+#if forUser
                 Console.WriteLine("获取成功!");
+#endif
                 uv.print();
                 return await Task.FromResult(uv);
             }catch (System.Net.Http.HttpRequestException)
@@ -138,7 +163,9 @@ namespace Netboard_tools
             try{
                 //获取页面
                 string pageurl = siteUrl + catagory+":" + page;
+#if forUser
                 Console.WriteLine($"获取页面信息中... 地址: {catagory + page}");
+#endif
                 string pageContent = http.GetStringAsync(pageurl).Result;
                 string pattern = @"<title>\s*(?<pagetitle>[^<]+?)\s*- Netboard\s*<\/title>[\s\S]*?WIKIREQUEST\.info\.pageId = (?<pageid>\d+)";
                 //获取页面id和标题
@@ -149,9 +176,11 @@ namespace Netboard_tools
                     pageId = int.Parse(match.Groups["pageid"].Value);
                     pageTitle = match.Groups["pagetitle"].Value;
                 }
-                
+#if forUser
                 Console.WriteLine($"获取页面信息完成! \n页面ID:{pageId.ToString()} 标题:\"{pageTitle}\"");
-            }catch (System.AggregateException)
+#endif
+            }
+            catch (System.AggregateException)
             {
                 Console.WriteLine("页面不存在");
                 pageId = -1;
