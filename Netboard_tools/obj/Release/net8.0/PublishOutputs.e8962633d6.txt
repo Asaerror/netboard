@@ -1,0 +1,5 @@
+D:\文件\脚本\SingleProject\C#\Netboard_tools\bin\Release\net8.0\publish\Netboard_tools.exe
+D:\文件\脚本\SingleProject\C#\Netboard_tools\bin\Release\net8.0\publish\Netboard_tools.dll
+D:\文件\脚本\SingleProject\C#\Netboard_tools\bin\Release\net8.0\publish\Netboard_tools.deps.json
+D:\文件\脚本\SingleProject\C#\Netboard_tools\bin\Release\net8.0\publish\Netboard_tools.runtimeconfig.json
+D:\文件\脚本\SingleProject\C#\Netboard_tools\bin\Release\net8.0\publish\Netboard_tools.pdb

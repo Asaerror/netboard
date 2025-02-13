@@ -1,0 +1,14 @@
+D:\文件\脚本\SingleProject\C#\Netboard_tools\bin\Debug\net8.0\Netboard_tools.exe
+D:\文件\脚本\SingleProject\C#\Netboard_tools\bin\Debug\net8.0\Netboard_tools.deps.json
+D:\文件\脚本\SingleProject\C#\Netboard_tools\bin\Debug\net8.0\Netboard_tools.runtimeconfig.json
+D:\文件\脚本\SingleProject\C#\Netboard_tools\bin\Debug\net8.0\Netboard_tools.dll
+D:\文件\脚本\SingleProject\C#\Netboard_tools\bin\Debug\net8.0\Netboard_tools.pdb
+D:\文件\脚本\SingleProject\C#\Netboard_tools\obj\Debug\net8.0\Netboard_tools.GeneratedMSBuildEditorConfig.editorconfig
+D:\文件\脚本\SingleProject\C#\Netboard_tools\obj\Debug\net8.0\Netboard_tools.AssemblyInfoInputs.cache
+D:\文件\脚本\SingleProject\C#\Netboard_tools\obj\Debug\net8.0\Netboard_tools.AssemblyInfo.cs
+D:\文件\脚本\SingleProject\C#\Netboard_tools\obj\Debug\net8.0\Netboard_tools.csproj.CoreCompileInputs.cache
+D:\文件\脚本\SingleProject\C#\Netboard_tools\obj\Debug\net8.0\Netboard_tools.dll
+D:\文件\脚本\SingleProject\C#\Netboard_tools\obj\Debug\net8.0\refint\Netboard_tools.dll
+D:\文件\脚本\SingleProject\C#\Netboard_tools\obj\Debug\net8.0\Netboard_tools.pdb
+D:\文件\脚本\SingleProject\C#\Netboard_tools\obj\Debug\net8.0\Netboard_tools.genruntimeconfig.cache
+D:\文件\脚本\SingleProject\C#\Netboard_tools\obj\Debug\net8.0\ref\Netboard_tools.dll
