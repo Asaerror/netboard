@@ -21,7 +21,7 @@ jobs:
 
     - name: Build and Run
       run: |
-        cd Netboard_tools/bin/Release/net8.0/publish
+        cd net8.0
         ./Netboard_tools.exe
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
