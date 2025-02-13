@@ -1,10 +1,7 @@
-﻿using System.Text.RegularExpressions;
+//#define forUser
+using System.Text.RegularExpressions;
 using System.Collections;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Reflection;
-using System.Drawing;
-using System.IO;
 
 namespace Netboard_tools
 {
@@ -20,7 +17,9 @@ namespace Netboard_tools
         {
             Console.Title = $"Netboard后端小工具 浮云制作~";
             Console.WriteLine("请不要在程序运行时对控制台进行缩放，不然会报错(懒得修bug)\n按任意键继续");
+#if forUser
             Console.ReadKey();
+#endif
             int max = GetLatesPage(hub,cat);
             Console.WriteLine($"最新地址为{cat}:{max}");
             Console.Clear();
@@ -161,15 +160,20 @@ namespace Netboard_tools
             } catch(Exception e)
             {
                 Console.WriteLine($"页面ID获取报错\n{e}\n是否重新发送请求(Y/N)");
+#if forUser
                 if (Console.ReadLine()?.ToLower() == "y")
                 {
-                    GetPageID (page, out pageId, out pageTitle, catagory);
+                    GetPageID(page, out pageId, out pageTitle, catagory);
                 }
                 else
                 {
                     pageId = -1;
                     pageTitle = "null";
                 }
+#else
+                GetPageID(page, out pageId, out pageTitle, catagory);
+#endif
+
             }
         }
         static void AddUVFromPage(int page, string catagory)
