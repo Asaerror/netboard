@@ -51,12 +51,14 @@ namespace Netboard_tools
 #endif
             }
             string uv = JsonSerializer.Serialize(User.all);
+            string pg = JsonSerializer.Serialize(User.allPage);
             string path = System.AppDomain.CurrentDomain.BaseDirectory + "out";
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
             File.WriteAllText(path +"\\user_UV.json",uv);
+            File.WriteAllText(path + "\\all_Page.json", pg);
             Console.WriteLine(path);
         }
 
@@ -66,6 +68,7 @@ namespace Netboard_tools
             readonly int id;
             public List<int> pages { get; set; }
             public static Dictionary<int, User> all = new();
+            public static Dictionary<int, string> allPage = new();
             public User(int id)
             {
                 this.id = id;
@@ -246,7 +249,9 @@ namespace Netboard_tools
         }
         static void GetPageID(int page, out int pageId, string catagory)
         {
-            GetPageID(page, out pageId, out _, catagory);
+            string title;
+            GetPageID(page, out pageId, out title, catagory);
+            User.allPage.Add(page,title);
         }
         #endregion
     }
