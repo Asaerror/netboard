@@ -26,8 +26,8 @@ jobs:
     - name: Commit and Push Output Files
       run: |
         # 配置 Git 身份
-        git config --global user.name "Floating-Cloud08"
-        git config --global user.email "2215705548@qq.com"
+        #git config --global user.name "奈版action"
+        #git config --global user.email ""
         
         # 添加、提交、推送文件
         cd net8.0
