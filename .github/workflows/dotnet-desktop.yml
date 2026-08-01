@@ -3,7 +3,7 @@ name: NetBoard自动数据更新
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string分时日月星期
-    - cron:  '59 * * * *'
+    - cron:  '00 00 * * *'
   workflow_dispatch:
 
 jobs:
@@ -27,10 +27,10 @@ jobs:
       run: |
         # 配置 Git 身份
         #git config --global user.name "奈版action"
-        #git config --global user.email ""
+        #git config --global user.email "bot@netboard.wikidot.com"
         
         # 添加、提交、推送文件
         cd net8.0
         git add out
-        git commit -m "Auto-commit output files"
+        git commit -m "自动推送文件"
         git push origin main
