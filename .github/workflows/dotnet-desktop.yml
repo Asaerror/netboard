@@ -3,7 +3,7 @@ name: NetBoard自动数据更新
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string分时日月星期
-    - cron:  '00 00 * * *'
+    - cron:  '0 * * * *'
   workflow_dispatch:
 
 jobs:
