@@ -23,4 +23,4 @@ jobs:
       run: |
         cd bot/net10.0
         # 支持的参数aimodel,botid,password,baseurl,apikey,train
-        ./NetboardBot.exe aimodel=glm-5.3 train=true
+        ./NetboardBot.exe aimodel=glm-5.3 train=false
