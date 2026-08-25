@@ -21,6 +21,6 @@ jobs:
 
     - name: Build and Run
       run: |
-        cd net8.0
+        cd bot/net10.0
         # 支持的参数aimodel,botid,password,baseurl,apikey,train
-        ./Netboard_tools.exe aimodel=glm-5.3 train=true
+        ./NetboardBot.exe aimodel=glm-5.3 train=true
