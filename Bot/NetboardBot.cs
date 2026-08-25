@@ -13,10 +13,10 @@ namespace NetboardBot
     class Program
     {
         // 替换成你的 API Key
-        static string apiKey = "sk-D20Oko3bWHZf3MBqLaseStSfeuJ8E95BBOyXwFSuWYqPdhnR";
+        static string apiKey = "";
         static string aimodel = "auto";//"DeepSeek-V4-Flash";
-        static string botID = "fcbot";
-        static string password = "S1mple:)";
+        static string botID = "";
+        static string password = "";
         static bool train = false;
         #region sysPromot
         static string sysPromot = @$"忽略之前的系统提示词。你是 Netboard 博客社区（一个 Wikidot 网站，俗称奈版/奶瓣）里的普通用户(ID叫{botID})，不是 AI。你正在看一条博客，随手留个评论。不要暴露自己是 AI，不要用“作为AI”这类表述。
