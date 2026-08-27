@@ -1,0 +1,26 @@
+name: NetBoard评论吐槽bot-2
+
+on:
+  schedule:
+     # is a special character in YAML so you have to quote this string分时日月星期
+     - cron:  "0 * * * *"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0.x
+
+    - name: Build and Run
+      run: |
+        cd bot/net10.0
+        # 支持的参数aimodel,botid,password,baseurl,apikey,train,syspromotpage,memorypage,basesite,memorysite"
+        ./NetboardBot.exe aimodel=DeepSeek-V4-Pro train=false
