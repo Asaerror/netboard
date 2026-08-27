@@ -4,7 +4,7 @@ on:
   schedule:
      # is a special character in YAML so you have to quote this string分时日月星期
      - cron:  "0 6-22 * * *"
-       timezone: "China/ShangHai"
+       timezone: "China/BeiJing"
   workflow_dispatch:
 
 jobs:
