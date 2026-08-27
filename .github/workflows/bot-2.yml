@@ -3,7 +3,7 @@ name: NetBoard评论吐槽bot-2
 on:
   schedule:
      # is a special character in YAML so you have to quote this string分时日月星期
-     - cron: "0/5 * * * *"
+     - cron: "* * * * *"
   workflow_dispatch:
 
 jobs:
