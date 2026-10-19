@@ -1,5 +1,6 @@
-﻿#define runOnce
-//#define train
+#define runOnce
+#define train
+//#define forUser
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
@@ -41,7 +42,7 @@ namespace NetboardBot
 
 记忆模块:
 系统消息会包含你的记忆模块，每轮输出的结尾都应该包含应该包含至少一个记忆操作，也可以是多个，如果不打算加记忆就用<memory:none>，用“我”来代指自己。
-不要包含重复的记忆。
+不要包含重复的记忆。注意用英文冒号“:”而不是中文冒号“：”，记忆模块的格式如下：
 指令参考:
 <memory(记忆id):append>
 追加记忆
@@ -72,19 +73,23 @@ memory后面的括号代表记忆的独特标签(比如日常,网站用户一类
         static HttpClient client = new HttpClient();
         static WikidotApi _bot;
         //static WikidotApi memoryBot = new WikidotApi("fcbot", "S1mple:)", "floatingcloud");
+        static string sysPromotePage = "hidden:ntb-sys";
         static WikidotApi memoryBot
         {
             get
             {
-                _bot.setSite("floatingcloud");
+                _bot.setSite(memorySite);
                 return _bot;
             }
         }
+        static string baseSite = "netboard";
+        static string baseStartPage = "cn:main";
+        static string memorySite = "floatingcloud";
         static WikidotApi bot
         {
             get
             {
-                _bot.setSite("netboard");
+                _bot.setSite(baseSite);
                 return _bot;
             }
         }
@@ -99,7 +104,7 @@ memory后面的括号代表记忆的独特标签(比如日常,网站用户一类
             Console.ForegroundColor= ConsoleColor.DarkYellow;
             if (arg.Length == 0)
             {
-                Console.WriteLine("无参数启动,支持的参数aimodel,botid,password,baseurl,apikey");
+                Console.WriteLine("无参数启动,支持的参数aimodel,botid,password,baseurl,apikey,train,syspromotpage,memorypage,basesite,memorysite");
                 return;
             }
             foreach(var i in arg)
@@ -128,6 +133,24 @@ memory后面的括号代表记忆的独特标签(比如日常,网站用户一类
                     case "train":
                         train = value.ToLower() == "true";
                         break; 
+                    case "syspromotpage":
+                        sysPromotePage = value;
+                        break;
+                    case "memorypage":
+                        memoryPage = value;
+                        break;
+                    case "basesite":
+                        baseSite = value;
+                        break;
+                    case "memorysite":
+                        memorySite = value;
+                        break;
+                    case "basestartpage":
+                        baseStartPage = value;
+                        break;
+                    case "syspromotepage":
+                        sysPromotePage = value;
+                        break;
                     default:
                         Console.WriteLine($"未知的参数名{key}");
                         break;
@@ -143,12 +166,18 @@ memory后面的括号代表记忆的独特标签(比如日常,网站用户一类
             WikidotApi.debugUserPassword = false;
             client.DefaultRequestHeaders.Authorization =new AuthenticationHeaderValue("Bearer", apiKey);
             string startMemory = memoryBot.getSourceCode(memoryPage);
+            string startSysPromot = memoryBot.getSourceCode(sysPromotePage);
             if (startMemory!="")
             {
                 aiMemory = WebUtility.HtmlDecode(startMemory);
                 Console.WriteLine($@"初始ai记忆:{aiMemory}");
             }
-            string homePage = bot.getPageHtml("cn:main");
+            if (startSysPromot != "")
+            {
+                sysPromot = WebUtility.HtmlDecode(startSysPromot);
+                Console.WriteLine($@"系统提示词:{sysPromot}");
+            }
+            string homePage = bot.getPageHtml(baseStartPage);
             homePage = homePage.Substring(homePage.IndexOf("<div id=\"page-content\">"));
             int index2 = homePage.IndexOf("<div id=\"page-info-break\">");
             homePage = homePage.Substring(0, index2);
@@ -160,8 +189,11 @@ memory后面的括号代表记忆的独特标签(比如日常,网站用户一类
                 int id;
                 string page = "";
                 string title = "";
+                int count = 0;
+#if !forUser
                 do
                 {
+                    count++;
                     id = Random.Shared.Next(match.Count);
                     flag = match[id].Groups["tag"].Value.Contains("置顶");
                     if (!flag)
@@ -169,13 +201,17 @@ memory后面的括号代表记忆的独特标签(比如日常,网站用户一类
                         page = "blog:" + match[id].Groups["id"].Value; ;
                         title = match[id].Groups["title"].Value;
                         string pageHtml = bot.getPageHtml(page);
-                        flag = Regex.Match(pageHtml, @$"<div class=""post""[\s\S]*?<div class=""info"">[\s\S]*?<a href=""http://www.wikidot.com/user:info/{botID}""").Success;
+                        flag = Regex.Match(pageHtml, @$"<div class=""post""[\s\S]*?<div class=""info"">[\s\S]*?<a href=""http[s]?://www.wikidot.com/user:info/{botID}""").Success;
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.WriteLine($"{page}-{title}");
                         Console.ResetColor();
                     }
-                } while (flag);
-                if (page=="error")
+                } while (flag&&count<25);
+#else
+                page = input("下一条/输入exit推出 \n");
+                title = bot.getPageInfo(page)["title"];
+#endif
+                if (count>=25)
                 {
                     continue;
                 }
@@ -206,9 +242,16 @@ memory后面的括号代表记忆的独特标签(比如日常,网站用户一类
             {
                 result = chat(source);
             }
+            if (result == "error")
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\n\n\nAI报错！\n\n\n");
+                Console.ResetColor();
+                return;
+            }
             string comment = dealMemory(result, out string memory);
             Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine($"AI评论:\n{comment}\n");
+            Console.WriteLine($"\n\nAI评论:\n{comment}\n");
             Console.ResetColor();
             Console.WriteLine($"记忆模块:{aiMemory}");
 #if !train
@@ -238,6 +281,7 @@ ID:asaerror 称呼 Asa,阿萨 是站长
         static string dealMemory(string raw,out string memory)
         {
             memory = "";
+            raw = raw.Replace('：',':');
             int startIndex = raw.IndexOf("<memory");
             if (startIndex == -1)return raw;
             memory = raw.Substring(startIndex);
@@ -334,9 +378,9 @@ ID:asaerror 称呼 Asa,阿萨 是站长
         }
         class MemoryEntry
         {
-            public string Tag { get; set; }
-            public int Importance { get; set; }
-            public string Content { get; set; }
+            public string Tag { get; set; } = "";
+            public int Importance { get; set; } = 0;
+            public string Content { get; set; } = "";
         }
         /// <summary>
         /// 解析记忆字符串为列表
@@ -385,8 +429,7 @@ ID:asaerror 称呼 Asa,阿萨 是站长
                 model = aimodel,
                 messages = new[]
                 {
-                new {role="system", content= sysPromot},
-                new {role="system", content= $"memory:{aiMemory}"},
+                new {role="system", content= $"{sysPromot}\n\n, memory:{aiMemory}"},
                 new { role = "user", 
                     content = 
                     $@"title:{title},author:{author},blog:{message}" }
@@ -395,26 +438,37 @@ ID:asaerror 称呼 Asa,阿萨 是站长
             Console.WriteLine("等待Ai响应...");
             var json = JsonSerializer.Serialize(requestBody);
             using var content = new StringContent(json, Encoding.UTF8, "application/json");
+            try
+            {
+                // 调用 chat completions 接口
+                using var response = client.PostAsync($"{baseUrl}/chat/completions", content);
+                var responseBody = response.Result.Content.ReadAsStringAsync().Result;
+                using var doc = JsonDocument.Parse(responseBody);
+                // 解析响应
 
-            // 调用 chat completions 接口
-            using var response = client.PostAsync($"{baseUrl}/chat/completions", content);
-
-            // 解析响应
-            var responseBody = response.Result.Content.ReadAsStringAsync().Result;
-            using var doc = JsonDocument.Parse(responseBody);
-            if (doc.RootElement.TryGetProperty("error", out var choices))
+                if (doc.RootElement.TryGetProperty("error", out var choices))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(responseBody);
+                    Console.ResetColor();
+                    return "error";
+                }
+                var result = doc.RootElement
+                    .GetProperty("choices")[0]
+                    .GetProperty("message")
+                    .GetProperty("content")
+                    .GetString();
+                return result ?? "";
+            }
+            catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(responseBody);
+                Console.WriteLine(ex);
                 Console.ResetColor();
                 return "error";
             }
-            var result = doc.RootElement
-                .GetProperty("choices")[0]
-                .GetProperty("message")
-                .GetProperty("content")
-                .GetString();
-            return result??"";
+
+            
         }
     }
 }
